@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'bootstrap4',
     'usuario',
     'empresa',
-    'candidato'
+    'candidato',
+    'vaga'
 ]
 
 MIDDLEWARE = [

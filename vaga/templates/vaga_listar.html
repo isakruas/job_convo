@@ -1,19 +1,5 @@
 {% extends 'templates/base.html' %}
 
-{% block is_authenticated_admin %}
-<meta http-equiv="refresh" content="0; URL='{{request.scheme}}://{{request.get_host}}/admin/'"/>
-{% endblock is_authenticated_admin %}
-
-{% block is_authenticated_candidato %}
-<meta http-equiv="refresh" content="0; URL='{{request.scheme}}://{{request.get_host}}/candidato/dashboard/'"/>
-{% endblock is_authenticated_candidato %}
-
-{% block unauthenticated_user %}
-<meta http-equiv="refresh" content="0; URL='{{request.scheme}}://{{request.get_host}}/'"/>
-{% endblock unauthenticated_user %}
-
-
-
 {% block bootstrap4_title %}
 
 {% endblock %}
@@ -103,7 +89,7 @@ body {
 {% block bootstrap4_before_content %}
 
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-  <a class="navbar-brand mr-auto mr-lg-0" href="#">{{user.get_nome}}</a>
+  <a class="navbar-brand mr-auto mr-lg-0" href="#">JobConvo</a>
   <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -113,91 +99,77 @@ body {
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Opções</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="{% url 'empresa_dashboard_vaga' %}">Voltar</a>
+          <a class="dropdown-item" href="{% url 'entrar' %}">Entrar</a>
+          <a class="dropdown-item" href="{% url 'registrar' %}">Registrar</a>
         </div>
       </li>
     </ul>
-
+ 
   </div>
 </nav>
 
 <div class="nav-scroller bg-white shadow-sm">
   <nav class="nav nav-underline">
-    <a class="nav-link" href="{% url 'empresa_dashboard' %}">Dashboard</a>
-    <a class="nav-link" href="{% url 'empresa_dashboard_perfil' %}">Perfil</a>
     <a class="nav-link active" href="#">Vagas</a>
   </nav>
 </div>
-<main role="main" class="container">
-<div class="my-3 p-3 bg-white rounded shadow-sm">
-  <div class="table-responsive-xl">
-    <h5>Detalhes da vaga</h5>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">Nome da vaga:</th>
-          <td>{{ object.nome }}</td>
-        </tr>
-        <tr>
-          <th scope="row">Faixa salarial:</th>
-          <td>{{ object.get_faixa_salarial }}</td>
-        </tr>
-        <tr>
-          <th scope="row">Requisitos:</th>
-          <td>{{ object.requisitos }}</td>
-        </tr>
-        <tr>
-          <th scope="row">Escolaridade mínima:</th>
-          <td>{{ object.get_escolaridade_minima }}</td>
-        </tr>
-        <tr>
-          <th scope="row">Data de registro:</th>
-          <td>{{ object.data_de_registro }}</td>
-        </tr>
-        <tr>
-          <th scope="row">Data de atualização:</th>
-          <td>{{ object.data_de_atualizacao }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 
-  {% if candidato_vaga_list %}
-  <div class="table-responsive-xl">
-    <h5>Candidatos</h5>
-    <table class="table">
-      <thead>
-        <tr>
-            <th scope="col">Nome</th>
-            <th scope="col">Experiência</th>
-            <th scope="col">Pretensão salarial</th>
-            <th scope="col">Última Escolaridade</th>
-            <th scope="col">Email</th>
-            <th scope="col">Pontos</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for candidato in candidato_vaga_list %}
-        <tr>
-            <td>{{ candidato.perfil.get_nome }}</td>
-            <td>{{ candidato.perfil.get_experiencia }}</td>
-            <td>{{ candidato.perfil.get_pretensao_salarial }}</td>
-            <td>{{ candidato.perfil.get_ultima_escolaridade }}</td>
-            <td>{{ candidato.perfil.candidato.get_email }}</td>
-            <td>{{ candidato.pontos }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<main role="main" class="container">
+
+  {% if vaga_list %}
+  <div class="my-3 p-3 bg-white rounded shadow-sm">
+
+    {% for vaga in vaga_list %}
+      <div class="media text-muted pt-3">
+        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+          <strong class="d-block text-gray-dark">{{vaga.nome}}</strong>
+
+        </p>
+         
+         <small class="d-block text-right mt-3">
+
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            
+            <label class="btn btn-info">
+              <input type="radio" onclick="location.href = '{{request.scheme}}://{{request.get_host}}/vaga/{{vaga.url}}/'" name="options" id="option2" autocomplete="off"> Detalhes
+            </label>
+
+
+ 
+          </div>
+         </small>
+
+      </div>
+    {% endfor %}
+ 
+    <small class="d-block text-right mt-3">
+    {% if is_paginated %}
+    <nav aria-label="Navegação de página">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Anterior</a>
+        </li>
+        {% endif %}
+        <li class="page-item"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próximo</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+    </small>
   </div>
+  {% else %}
+    <div class="media text-muted pt-3">
+      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        Não há vagas disponíveis no momento.
+      </p>
     </div>
   {% endif %}
+
 </main>
 
 {% endblock %}
@@ -216,5 +188,8 @@ body {
         })
       })
     </script>
-{% endblock %}
 
+    <!-- Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+ 
+{% endblock %}

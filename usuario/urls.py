@@ -4,7 +4,6 @@ from django.conf import settings
 from django.views.decorators.http import require_GET
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-
 from .views import (
     UsuarioCreateView,
 )
@@ -23,7 +22,7 @@ def dashboard(request):
 
 urlpatterns = [
     path('registrar/', UsuarioCreateView.as_view(), name='registrar'),
-    path('', auth_views.LoginView.as_view(
+    path('entrar/', auth_views.LoginView.as_view(
         template_name=settings.BASE_DIR / 'usuario/templates/entrar.html',
     ), name='entrar', ),
     path('sair/', auth_views.LogoutView.as_view(next_page='/'), name='sair'),

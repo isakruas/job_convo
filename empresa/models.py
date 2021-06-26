@@ -113,7 +113,7 @@ class Vaga(models.Model):
 
     @property
     def get_data_de_atualizacao(self):
-        return self.data_de_registro.strftime('%d/%m/%Y às %H:%M:%S')
+        return self.data_de_atualizacao.strftime('%d/%m/%Y às %H:%M:%S')
 
 
 def vaga_pre_save(signal, instance, sender, **kwargs):
